@@ -57,7 +57,7 @@ node {
             }
             post {  
                 always {  
-                    emailtest body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[[$class: 'RequesterRecipientProvider']], subject: 'Test'
+                    emailtest body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
                 }  
                 success {  
                     echo 'This will run only if successful'  
