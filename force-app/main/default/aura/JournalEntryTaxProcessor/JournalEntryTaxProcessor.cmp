@@ -1,0 +1,192 @@
+<aura:component controller="JournalEntryLineTaxCalculation" implements="force:lightningQuickActionWithoutHeader,force:hasRecordId" >
+    <aura:html tag="style">
+        .slds-form-element__label {
+        display : none;
+        visibility : hidden;
+        }
+        .slds-p-around_medium
+        {
+        text-align: -webkit-center;
+        }
+    </aura:html>
+    <aura:handler name="init" value="{! this }" action="{! c.doinit }"/>
+    <!--aura handler with waiting and donewaiting events-->
+    <aura:handler event="aura:waiting" action="{!c.showSpinner}"/>
+    <aura:handler event="aura:doneWaiting" action="{!c.hideSpinner}"/>
+    
+    <aura:attribute name="lstOfJournalEntryline" type="list"/>
+    <aura:attribute name="taxWrapperList" type="list"/>
+    <aura:attribute name="allTaxes" type="list"/>
+    <aura:attribute name="values" type="string"/>
+    <aura:attribute name="labels" type="string"/>
+    <aura:attribute name="taxWrapper" type="sObject"/>
+    <aura:attribute name="journalEntry" type="list"/>
+    <aura:attribute name="taxEditMode" type="boolean" default="false" />
+    <aura:attribute name="taxEditAmount" type="integer"/>
+    <aura:attribute name="showErrorClass" type="boolean" default="false"/>
+    <aura:attribute name="showError" type="boolean" default="true" />
+    
+    <lightning:notificationsLibrary aura:id="notifLib"/>
+    
+    <!--component attributs -->
+    <aura:attribute name="spinner" type="boolean" default="false"/>
+    
+    <!--loading spinner start-->
+    <aura:if isTrue="{!v.spinner}">
+        <div aura:id="spinnerId" class="slds-spinner_container">
+            <div class="slds-spinner--brand  slds-spinner slds-spinner--medium slds-is-relative" role="alert">
+                <span class="slds-assistive-text">Loading...</span>
+                <div class="slds-spinner__dot-a"></div>
+                <div class="slds-spinner__dot-b"></div>
+            </div>
+        </div>
+    </aura:if>
+    
+    <!-- Loading spinner end--> 
+    
+    
+    
+    
+    <div class="slds-grid slds-gutters" style="padding-top: 5px;">
+        <div class="slds-grid slds-col slds-has-flexi-truncate slds-media--center" data-aura-rendered-by="1177:0">
+            <div class="profilePicWrapper slds-media slds-no-space" data-aura-rendered-by="1178:0" style="transform: scale3d(1, 1, 1) translate3d(0px, 0px, 0px);">
+                <div class="slds-media__figure slds-icon forceEntityIcon" style="background-color: #22a48a" data-aura-rendered-by="1182:0" data-aura-class="forceEntityIcon">
+                    <span data-aura-rendered-by="1185:0" class="uiImage" data-aura-class="uiImage">
+                        <img data-aura-rendered-by="1183:0" src="/img/icon/t4v35/custom/custom90_120.png" class="icon " alt="Journal Entry" title="Journal Entry"/>
+                    </span>
+                </div>
+            </div>
+            <div class="slds-media__body" data-aura-rendered-by="1186:0">
+                <h1 data-aura-rendered-by="1187:0">
+                    <nav class="entityNameTitle" data-aura-rendered-by="1188:0" style="opacity: 1;">
+                        <ol class="slds-breadcrumb slds-line-height_reset" data-aura-rendered-by="1189:0">
+                            <li class="slds-breadcrumb__item" data-aura-rendered-by="1190:0">
+                                <span data-aura-rendered-by="1191:0">Journal Entry</span>
+                            </li>
+                        </ol>
+                    </nav>
+                    <div class="slds-page-header__title slds-m-right--small slds-truncate slds-align-middle" data-aura-rendered-by="1193:0" title="{!v.taxWrapper.journalEntryName}">
+                        <span data-aura-rendered-by="1060:0" class="uiOutputText" data-aura-class="uiOutputText">{!v.taxWrapper.journalEntryName}</span>
+                    </div>
+                </h1>
+            </div>
+        </div>
+        
+        <aura:if isTrue="{!v.showError == false}">
+            <div class="slds-col slds-size_1-of-3">
+                <span>
+                    <lightning:select name="select" aura:id="tax" label="{!v.labels}" value="{!v.values}" onchange="{!c.onChange}" >       
+                        <aura:iteration items="{!v.taxWrapper.entryTax}" var="taxes">
+                            <option text="{!taxes.Tax_Name__c}" value="{!taxes.Id}" selected="{!taxes.Tax_Name__c==v.values}" />
+                        </aura:iteration>
+                    </lightning:select>
+                </span>
+            </div>
+        </aura:if>
+    </div>
+    <div style="padding-top: 25px;"></div>
+    <aura:if isTrue="{!v.showError == false}">
+        <div class="slds-table_edit_container slds-is-relative" style="overflow: hidden">
+            <table aria-multiselectable="true" style="font-size: 15px;" class="slds-table slds-no-cell-focus slds-table_bordered slds-table_edit slds-table_fixed-layout slds-table_resizable-cols" role="grid" >
+                <thead>
+                    <tr class="slds-line-height_reset" style="height: 45px;">
+                        <th aria-label="Name" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col" style="width:8.75rem">
+                            <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                <span class="slds-assistive-text">Sort by: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="Id">Name</span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input type="range" aria-label="Name column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-533" max="1000" min="20" tabindex="-1" />
+                                <span class="slds-resizable__handle">
+                                    <span class="slds-resizable__divider"></span>
+                                </span>
+                            </div>
+                        </th>
+                        <th aria-label="Total Amount" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col" style="width:8.75rem">
+                            <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                <span class="slds-assistive-text">Sort by: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="Id">Total Amount</span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input type="range" aria-label="Total Amount column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-533" max="1000" min="20" tabindex="-1" />
+                                <span class="slds-resizable__handle">
+                                    <span class="slds-resizable__divider"></span>
+                                </span>
+                            </div>
+                        </th>
+                        <th aria-label="Tax Percentage" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col" style="width:8.75rem">
+                            <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                <span class="slds-assistive-text">Sort by: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="Account Name">Tax Percentage</span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input type="range" aria-label="Tax Percentage column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-534" max="1000" min="20" tabindex="-1" />
+                                <span class="slds-resizable__handle">
+                                    <span class="slds-resizable__divider"></span>
+                                </span>
+                            </div>
+                        </th>
+                        <th aria-label="Tax Amount" aria-sort="none" class="slds-is-resizable slds-is-sortable" scope="col" style="width:8.75rem">
+                            <a class="slds-th__action slds-text-link_reset" href="javascript:void(0);" role="button" tabindex="-1">
+                                <span class="slds-assistive-text">Sort by: </span>
+                                <div class="slds-grid slds-grid_vertical-align-center slds-has-flexi-truncate">
+                                    <span class="slds-truncate" title="Phone">Tax Amount</span>
+                                </div>
+                            </a>
+                            <div class="slds-resizable">
+                                <input type="range" aria-label="Tax Amount column width" class="slds-resizable__input slds-assistive-text" id="cell-resize-handle-534" max="1000" min="20" tabindex="-1" />
+                                <span class="slds-resizable__handle">
+                                    <span class="slds-resizable__divider"></span>
+                                </span>
+                            </div>
+                        </th>   
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <aura:iteration items="{!v.taxWrapper.journalEntryWapperList}" var="obj">
+                        <c:inlineEditRow singleRec="{!obj}"/>
+                        
+                    </aura:iteration>
+                    
+                </tbody>
+            </table>
+        </div>
+        <footer class="slds-modal__footer" style="padding: 0.85rem 1rem;">
+            
+        </footer>
+
+
+
+        <footer class="slds-modal__footer cJournalEntryTaxProcessor" style="padding: 0.85rem 1rem;" data-aura-rendered-by="66:1002;a" data-aura-class="cJournalEntryTaxProcessor">
+                <div class="slds-grid slds-gutters">
+                    <div class="slds-col slds-size_2-of-3" style="width: 60%;">
+                        
+                        <!--<ui:inputCheckbox aura:id="checkbox" label="Select all Journal Entry Lines for this Account" value="{!isChecked}" />-->
+                        <lightning:input type="checkbox"  label="Select all Journal Entry Lines for this Account" name="selectAll" checked="false" onchange="{!c.showInBulk}"/>
+                    </div>
+                    <div class="slds-col slds-size_1-of-3" style="width: 40%;">
+                        <lightning:button variant="neutral" 
+                                            label="Cancel"
+                                            title="Cancel"
+                                            onclick="{! c.closeModel}"/>
+                        <lightning:button variant="brand" 
+                                            label="Save"
+                                            title="Save"
+                                            onclick="{! c.taxCalculationCtr }"/>
+                    </div>
+                </div>
+        </footer>
+        <aura:set attribute="else">
+            <div class="slds-box" style="height: 160px; font-weight: bolder;">
+                <p>{!v.taxWrapper.errorMesaage}</p>
+            </div>
+        </aura:set>
+    </aura:if>  
+</aura:component>

@@ -1,0 +1,15 @@
+.THIS .inputFieldWidth {
+    width:40%;
+}
+
+
+.THIS.slds-spinner_container {  
+    z-index: 10000;
+    position: fixed;   
+  }
+
+    .THIS.slds-spinner_container{
+    background-color: rgba(0, 0, 0, 0.10);
+    margin-top: 350px;
+    margin-bottom: 350px; 
+}
