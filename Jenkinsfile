@@ -96,9 +96,9 @@ node {
                 PACKAGE_VERSION = response.result.SubscriberPackageVersionId
                 println PACKAGE_VERSION
                 response = null
-                */
-                echo ${PACKAGE_VERSION}
                 
+                echo ${PACKAGE_VERSION}
+                */
                 
             }
             
