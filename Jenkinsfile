@@ -120,30 +120,9 @@ node {
             finally {  
                 println 'Finally start'
                 //emailext body: 'This is email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
-                emailext body: "Job '${JOB_NAME}' (${BUILD_NUMBER}) ${currentBuild.currentResult} - confirmation" , recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
-                /*
-                always {  
-                    println 'always'
-                    emailext body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
-                }  
-                success {  
-                    println 'success'
-                    echo 'This will run only if successful'  
-                }  
-                failure {  
-                    println 'failure'
-                    mail bcc: '', body: "<b>Example</b><br>Project: ${env.JOB_NAME} <br>Build Number: ${env.BUILD_NUMBER} <br> URL de build: ${env.BUILD_URL}", cc: '', charset: 'UTF-8', from: '', mimeType: 'text/html', replyTo: '', subject: "ERROR CI: Project name -> ${env.JOB_NAME}", to: "foo@foomail.com";  
-                }  
-                unstable {  
-                    println 'unstable'
-                    echo 'This will run only if the run was marked as unstable'  
-                }  
-                changed {  
-                    println 'changed'
-                    echo 'This will run only if the state of the Pipeline has changed'  
-                    echo 'For example, if the Pipeline was previously failing but is now successful'  
-                }
-                */  
+                emailext body: "Dear User, \n \n
+                               Job '${JOB_NAME}' (${BUILD_NUMBER}) ${currentBuild.currentResult} - confirmation" , recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) ${currentBuild.currentResult} - confirmation"
+                  
             }
         }
     }
