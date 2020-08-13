@@ -119,12 +119,12 @@ node {
             }
             finally {  
                 println 'Finally start'
-                emailext body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
-                //emailext body: 'This is a sample mail for testing', recipientProviders: [requestor(), developers()], subject: 'This is a sample mail', to: 'kauravmayur'
+                //emailext body: 'This is email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
+                emailext body: $PROJECT_NAME' - Build # '$BUILD_NUMBER' - '$BUILD_STATUS!, recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
                 /*
                 always {  
                     println 'always'
-                    emailtest body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
+                    emailext body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
                 }  
                 success {  
                     println 'success'
