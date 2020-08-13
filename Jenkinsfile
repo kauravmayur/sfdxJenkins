@@ -119,7 +119,8 @@ node {
             }
             finally {  
                 println 'Finally start'
-                emailtest body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
+                emailext body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
+                //emailext body: 'This is a sample mail for testing', recipientProviders: [requestor(), developers()], subject: 'This is a sample mail', to: 'kauravmayur'
                 /*
                 always {  
                     println 'always'
