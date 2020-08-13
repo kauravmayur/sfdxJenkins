@@ -55,7 +55,17 @@ node {
                 }
             }
 
-
+            // -------------------------------------------------------------------------
+            // Run unit tests in test scratch org.
+            // -------------------------------------------------------------------------
+            
+            stage('Run Tests In Test Scratch Org') {
+                rc = command "${toolbelt} force:apex:test:run --targetusername HubOrg --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
+                if (rc != 0) {
+                    error 'Salesforce unit test run in test scratch org failed.'
+                }
+            }
+            
             
             // -------------------------------------------------------------------------
             // Create package version.
