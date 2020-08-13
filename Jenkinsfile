@@ -120,7 +120,7 @@ node {
             finally {  
                 println 'Finally start'
                 //emailext body: 'This is email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
-                emailext body: $PROJECT_NAME' - Build # '$BUILD_NUMBER' - '$BUILD_STATUS, recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
+                emailext body: "Job '${JOB_NAME}' (${BUILD_NUMBER}) is waiting for input", recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
                 /*
                 always {  
                     println 'always'
