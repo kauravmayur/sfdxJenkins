@@ -62,10 +62,16 @@ node {
             // -------------------------------------------------------------------------
             
             stage('Create Package Version') {
-                createPackage = command "${toolbelt}  force:package:create --name sfdxPrject --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
-                println createPackage
-                /*
-                output = command "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json "
+                //createPackage = command "${toolbelt}  force:package:create --name sfdxPrject --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
+                //println createPackage
+                
+                //output = command "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json "
+                if (isUnix()) {
+                    output = sh returnStdout: true, script: "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json"
+                } else {
+                    output = bat(returnStdout: true, script: "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json").trim()
+                    output = output.readLines().drop(1).join(" ")
+                }
                 println output
                 // Wait 5 minutes for package replication.
                 sleep 30
@@ -80,7 +86,7 @@ node {
                 response = null
 
                 echo ${PACKAGE_VERSION}
-                */
+                
                 
             }
             
