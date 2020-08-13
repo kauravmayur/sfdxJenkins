@@ -10,7 +10,7 @@ node {
     def SERVER_KEY_CREDENTALS_ID=env.JWT_CRED_ID_DH
     def TEST_LEVEL='RunLocalTests'
     def PACKAGE_NAME='sfdxJenkinsPrject'
-    def PACKAGE_VERSION = '04t7F000005N0EKQA0'
+    def PACKAGE_VERSION
     def SF_INSTANCE_URL = env.SFDC_HOST_DH ?: "https://login.salesforce.com"
     def SFDC_USERNAME
     def toolbelt = tool 'toolbelt'
@@ -59,7 +59,7 @@ node {
                 // -------------------------------------------------------------------------
                 // Run unit tests in test scratch org.
                 // -------------------------------------------------------------------------
-                /*
+                
                 stage('Run Tests In Test Scratch Org') {
                     rc = command "${toolbelt} force:apex:test:run --targetusername HubOrg --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
                     if (rc != 0) {
@@ -67,17 +67,17 @@ node {
                     }
                 }
                 
-                */
+                
                 // -------------------------------------------------------------------------
                 // Create package version.
                 // -------------------------------------------------------------------------
                 
                 stage('Create Package Version') {
-                    createPackage = command "${toolbelt}  force:package:create --name ${PACKAGE_NAME} --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
-                    println createPackage
+                    //createPackage = command "${toolbelt}  force:package:create --name ${PACKAGE_NAME} --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
+                    //println createPackage
                     
                     //output = command "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json "
-                    /*
+                    
                     if (isUnix()) {
                         output = sh returnStdout: true, script: "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json"
                     } else {
@@ -98,7 +98,7 @@ node {
                     response = null
                     
                     echo ${PACKAGE_VERSION}
-                    */
+                    
                     
                 }
                 
@@ -120,7 +120,7 @@ node {
             finally {  
                 println 'Finally start'
                 //emailext body: 'This is email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
-                emailext body: "This is to inform you that Job '${JOB_NAME}' (${BUILD_NUMBER}) having ${currentBuild.currentResult} status" , recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) ${currentBuild.currentResult} - confirmation"
+                emailext body: "This is to inform you that Job '${JOB_NAME}' (${BUILD_NUMBER}) having ${currentBuild.currentResult} status and your Subscriber Package Version Id is ${PACKAGE_VERSION}" , recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) ${currentBuild.currentResult} - confirmation"
                   
             }
         }
