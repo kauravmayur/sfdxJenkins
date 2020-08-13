@@ -118,7 +118,9 @@ node {
                 }
             }
             finally {  
-                println 'Finally'
+                println 'Finally start'
+                emailtest body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
+                /*
                 always {  
                     println 'always'
                     emailtest body: 'A Test Email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
@@ -139,7 +141,8 @@ node {
                     println 'changed'
                     echo 'This will run only if the state of the Pipeline has changed'  
                     echo 'For example, if the Pipeline was previously failing but is now successful'  
-                }  
+                }
+                */  
             }
         }
     }
