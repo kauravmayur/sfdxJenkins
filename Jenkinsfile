@@ -19,7 +19,7 @@ node {
 	def PACKAGE_Id
     println inputFile
     //println inputFile.packageAliases.sfdxPrject
-    PACKAGE_Id = inputFile.packageAliases.sfdxPrject
+    PACKAGE_Id = inputFile.packageAliases.sfdxJenkinsPrject
     println PACKAGE_Id
     
 
