@@ -15,6 +15,12 @@ node {
     def SFDC_USERNAME
     def toolbelt = tool 'toolbelt'
 
+    def inputFile = readJSON file: 'C:/SFDC_Revision_Project/mayursinghkaurav/sfdxJenkins-1/sfdx-project.json'
+	def PACKAGE_Id
+    println inputFile
+    //println inputFile.packageAliases.sfdxPrject
+    PACKAGE_Id = inputFile.packageAliases.sfdxPrject
+    println PACKAGE_Id
     
 
     // -------------------------------------------------------------------------
