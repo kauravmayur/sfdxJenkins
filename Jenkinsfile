@@ -87,6 +87,12 @@ node {
                     //output = command "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json "
                     println 'if condition start'
                     
+                    if(PACKAGE_Id == null){
+                        println 'if blank condition enter null'
+                        createPackage = command "${toolbelt}  force:package:create --name ${PACKAGE_NAME} --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
+                        println 'Package created'
+                        println createPackage
+                    }
                     if(PACKAGE_Id == ''){
                         println 'if blank condition enter'
                         createPackage = command "${toolbelt}  force:package:create --name ${PACKAGE_NAME} --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
