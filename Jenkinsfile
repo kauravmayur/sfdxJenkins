@@ -67,10 +67,12 @@ node {
                 // -------------------------------------------------------------------------
                 
                 stage('Run Tests In Test Scratch Org') {
+                    /*
                     rc = command "${toolbelt} force:apex:test:run --targetusername HubOrg --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
                     if (rc != 0) {
                         error 'Salesforce unit test run in test scratch org failed.'
                     }
+                    */
                 }
                 
                 
@@ -83,7 +85,15 @@ node {
                     //println createPackage
                     
                     //output = command "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json "
+                    println 'if condition start'
                     
+                    if(PACKAGE_Id == null){
+                        println 'if blank condition enter'
+                        createPackage = command "${toolbelt}  force:package:create --name ${PACKAGE_NAME} --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
+                        println 'Package created'
+                        println createPackage
+                    }
+                    /*
                     if (isUnix()) {
                         output = sh returnStdout: true, script: "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json"
                     } else {
@@ -104,7 +114,7 @@ node {
                     response = null
                     
                     echo ${PACKAGE_VERSION}
-                    
+                    */
                     
                 }
                 
