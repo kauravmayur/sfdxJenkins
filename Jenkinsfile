@@ -6,21 +6,16 @@ import groovy.json.JsonSlurper
 node {
 
     def SF_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
+    def SF_CONSUMER_TARGET_KEY=env.CONNECTED_APP_TARGET_CONSUMER_KEY_DH
     def SF_USERNAME=env.HUB_ORG_DH
+    def SF_USERNAME_TARGET=env.HUB_TARGET_ORG_DH
     def SERVER_KEY_CREDENTALS_ID=env.JWT_CRED_ID_DH
     def TEST_LEVEL='RunLocalTests'
-    def PACKAGE_NAME='sfdxJenkinsPrject2'
-    def PACKAGE_VERSION
+    def PACKAGE_NAME='sfdxPrject'
+    def PACKAGE_VERSION = '04t0K0000010rN5QAI'
     def SF_INSTANCE_URL = env.SFDC_HOST_DH ?: "https://login.salesforce.com"
     def SFDC_USERNAME
     def toolbelt = tool 'toolbelt'
-
-    def inputFile = readJSON file: 'C:/SFDC_Revision_Project/mayursinghkaurav/sfdxJenkins-1/sfdx-project.json'
-	def PACKAGE_Id
-    println inputFile
-    //println inputFile.packageAliases.sfdxPrject
-    PACKAGE_Id = inputFile.packageAliases.sfdxJenkinsPrject2
-    println PACKAGE_Id
     
 
     // -------------------------------------------------------------------------
@@ -53,13 +48,12 @@ node {
                 stage('Authorize DevHub') {
                     println 'code in Authorize DevHub'
                     //rc = command "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile ${server_key_file} --setdefaultdevhubusername --setalias HubOrg"
-                    rc = command "${toolbelt} force:auth:jwt:grant --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile \"${server_key_file}\" --setdefaultdevhubusername --instanceurl ${SF_INSTANCE_URL}  --setalias HubOrg"
+                    rc = command "${toolbelt} force:auth:jwt:grant --clientid ${SF_CONSUMER_TARGET_KEY} --username ${SF_USERNAME_TARGET} --jwtkeyfile \"${server_key_file}\" --setdefaultdevhubusername --instanceurl ${SF_INSTANCE_URL}   --setalias HubOrg"
                     println rc
                     if (rc != 0) {
                         println 'code in Authorize DevHub error block'
                         error 'Salesforce dev hub org authorization failed.'
                     }
-                    
                 }
                 
                 // -------------------------------------------------------------------------
@@ -67,14 +61,11 @@ node {
                 // -------------------------------------------------------------------------
                 
                 stage('Run Tests In Test Scratch Org') {
-                    /*
                     rc = command "${toolbelt} force:apex:test:run --targetusername HubOrg --wait 10 --resultformat tap --codecoverage --testlevel ${TEST_LEVEL}"
                     if (rc != 0) {
                         error 'Salesforce unit test run in test scratch org failed.'
                     }
-                    */
                 }
-                
                 
                 // -------------------------------------------------------------------------
                 // Create package version.
@@ -83,23 +74,7 @@ node {
                 stage('Create Package Version') {
                     //createPackage = command "${toolbelt}  force:package:create --name ${PACKAGE_NAME} --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
                     //println createPackage
-                    
-                    //output = command "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json "
-                    println 'if condition start'
-                    
-                    if(PACKAGE_Id == null){
-                        println 'if blank condition enter null'
-                        createPackage = command "${toolbelt}  force:package:create --name ${PACKAGE_NAME} --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
-                        println 'Package created'
-                        println createPackage
-                    }
-                    if(PACKAGE_Id == ''){
-                        println 'if blank condition enter'
-                        createPackage = command "${toolbelt}  force:package:create --name ${PACKAGE_NAME} --description My_Package --packagetype Unlocked --path force-app --nonamespace --targetdevhubusername HubOrg"
-                        println 'Package created'
-                        println createPackage
-                    }
-                    
+                    /*
                     if (isUnix()) {
                         output = sh returnStdout: true, script: "${toolbelt} force:package:version:create --package ${PACKAGE_NAME} --installationkeybypass --wait 10 --targetdevhubusername HubOrg  --json"
                     } else {
@@ -109,40 +84,62 @@ node {
                     println output
                     // Wait 5 minutes for package replication.
                     sleep 30
-
                     
-                    //def jsonSlurper = new JsonSlurperClassic()
                     def jsonSlurper = new JsonSlurper()
                     def response = jsonSlurper.parseText(output)
-
                     PACKAGE_VERSION = response.result.SubscriberPackageVersionId
                     println PACKAGE_VERSION
                     response = null
-                    
-                    echo ${PACKAGE_VERSION}
+                    */
+                    println PACKAGE_VERSION
                     
                     
                 }
                 
 
                 // -------------------------------------------------------------------------
-                // Create new scratch org to install package to.
+                // Authorize target org to install package to.
                 // -------------------------------------------------------------------------
-                
-                stage('Create Package Install Scratch Org') {
-                    /*
-                    rc = command "${toolbelt} force:org:create --targetdevhubusername HubOrg --setdefaultusername --definitionfile config/project-scratch-def.json --setalias installorg --wait 10 --durationdays 1"
+                stage('Authorize target org') {
+                    println 'code in Authorize DevHub'
+                    //rc = command "${toolbelt} force:auth:jwt:grant --instanceurl ${SF_INSTANCE_URL} --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile ${server_key_file} --setdefaultdevhubusername --setalias HubOrg"
+                    rc = command "${toolbelt} force:auth:jwt:grant --clientid ${SF_CONSUMER_KEY} --username ${SF_USERNAME} --jwtkeyfile \"${server_key_file}\" --setdefaultdevhubusername --instanceurl ${SF_INSTANCE_URL}  --setalias HubTargetOrg"
+                    println rc
                     if (rc != 0) {
-                        error 'Salesforce package install scratch org creation failed.'
+                        println 'code in Authorize target org error block'
+                        error 'Salesforce target org authorization failed.'
                     }
-                    */
-                    
                 }
+
+                // -------------------------------------------------------------------------
+                // Run unit tests in package install scratch org.
+                // -------------------------------------------------------------------------
+
+                stage('Run Tests In Package Install target Org') {
+                    rc = command "${toolbelt} force:apex:test:run --targetusername HubTargetOrg --resultformat tap --codecoverage --testlevel ${TEST_LEVEL} --wait 10"
+                    if (rc != 0) {
+                        error 'Salesforce unit test run in pacakge install scratch org failed.'
+                    }
+                }
+
+                // -------------------------------------------------------------------------
+                // Install package in target org.
+                // -------------------------------------------------------------------------
+
+                stage('Install Package In target Org') {
+                    rc = command "${toolbelt} force:package:install --package ${PACKAGE_VERSION} --targetusername HubTargetOrg --wait 10"
+                    if (rc != 0) {
+                        error 'Salesforce package install failed.'
+                    }
+                }
+
+                
             }
+            
             finally {  
                 println 'Finally start'
-                //emailext body: 'This is email', recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
-                //emailext body: "This is to inform you that Job '${JOB_NAME}' (${BUILD_NUMBER}) having ${currentBuild.currentResult} status and your Subscriber Package Version Id is ${PACKAGE_VERSION}" , recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) ${currentBuild.currentResult} - confirmation"
+                //emailext body: "This is email", recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: 'Test'
+                emailext body: "This is to inform you that Job '${JOB_NAME}' (${BUILD_NUMBER}) having ${currentBuild.currentResult} status and your Subscriber Package Version Id is ${PACKAGE_VERSION}" , recipientProviders: [[$class: 'DevelopersRecipientProvider'],[$class: 'RequesterRecipientProvider']], subject: "Job '${JOB_NAME}' (${BUILD_NUMBER}) ${currentBuild.currentResult} - confirmation"
                   
             }
         }
