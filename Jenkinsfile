@@ -17,10 +17,10 @@ pipeline {
 				
 				echo "***************************************************************"
 				
-				sh 'echo "SF_CONSUMER_KEY =  ${env.SF_CONSUMER_KEY}"'
-				sh 'echo "SF_USERNAME =  ${env.SF_USERNAME}"'
-				sh 'echo "SF_INSTANCE_URL =  ${env.SF_INSTANCE_URL}"'
-				sh 'echo "SERVER_KEY_CREDENTALS_ID =  ${env.SERVER_KEY_CREDENTALS_ID}"'
+				sh 'echo "SF_CONSUMER_KEY =  $SF_CONSUMER_KEY"'
+				sh 'echo "SF_USERNAME =  $SF_USERNAME"'
+				sh 'echo "SF_INSTANCE_URL =  $SF_INSTANCE_URL"'
+				sh 'echo "SERVER_KEY_CREDENTALS_ID =  $SERVER_KEY_CREDENTALS_ID"'
             }
         }
         
