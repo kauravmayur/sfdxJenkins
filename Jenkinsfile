@@ -17,10 +17,6 @@ pipeline {
 				
 				echo "***************************************************************"
 				
-				sh 'echo "SF_CONSUMER_KEY =  $SF_CONSUMER_KEY"'
-				sh 'echo "SF_USERNAME =  $SF_USERNAME"'
-				sh 'echo "SF_INSTANCE_URL =  $SF_INSTANCE_URL"'
-				sh 'echo "SERVER_KEY_CREDENTALS_ID =  $SERVER_KEY_CREDENTALS_ID"'
             }
         }
         
