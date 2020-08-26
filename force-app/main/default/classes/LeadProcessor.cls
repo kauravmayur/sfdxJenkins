@@ -4,6 +4,7 @@ global class LeadProcessor implements Database.Batchable<sObject>{
     }
     global void execute(Database.BatchableContext bc, List<Lead> scope){
         System.debug('***** LeadProcessor execute *****');
+        System.debug('***** LeadProcessor execute *****');
         for(Lead l: scope){
             l.LeadSource = 'Dreamforce';
         }

@@ -7,10 +7,11 @@ pipeline {
 	def SFDX_USE_GENERIC_UNIX_KEYCHAIN = true
 	def SF_CONSUMER_KEY=env.CONNECTED_APP_CONSUMER_KEY_DH
     def SF_USERNAME=env.HUB_ORG_DH
+    def SF_USERNAME_TARGET=env.HUB_TARGET_ORG_DH
     def SERVER_KEY_CREDENTALS_ID=env.JWT_CRED_ID_DH
     def TEST_LEVEL='RunLocalTests'
-    def PACKAGE_NAME='sfdxJenkinsPrject2'
-    def PACKAGE_VERSION
+    def PACKAGE_NAME='sfdxPrject'
+    def PACKAGE_VERSION = '04t0K0000010rN5QAI'
     def SF_INSTANCE_URL = env.SFDC_HOST_DH ?: "https://login.salesforce.com"
     def SFDC_USERNAME
     def toolbelt = tool 'toolbelt'
