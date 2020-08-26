@@ -3,23 +3,22 @@ pipeline {
     stages {
         stage('Example Username/Password') {
             environment {
-                SERVICE_CREDS = credentials('my-predefined-username-password')
+               SFDX_USE_GENERIC_UNIX_KEYCHAIN = true
+			   SF_CONSUMER_KEY = "3MVG9n_HvETGhr3C0IBETj._LtyhM_yb8HXMP2QSpyRVInHpJgdBkUXOJsfSwEASLwZxr2pqzmKpI_LWJz1jC"
+			   SF_USERNAME = "krishna@rsystems.com.package"
+			   SF_INSTANCE_URL = "https://login.salesforce.com"
+			   SERVER_KEY_CREDENTALS_ID = "039c2d32-4253-4c49-8974-f652f3e0c125"
             }
             steps {
-                sh 'echo "Service user is $SERVICE_CREDS_USR"'
-                sh 'echo "Service password is $SERVICE_CREDS_PSW"'
-                sh 'curl -u $SERVICE_CREDS https://myservice.example.com'
+                echo "SF_CONSUMER_KEY =  ${env.SF_CONSUMER_KEY}"
+				echo "SF_USERNAME =  ${env.SF_USERNAME}"
+				echo "SF_INSTANCE_URL =  ${env.SF_INSTANCE_URL}"
+				echo "SERVER_KEY_CREDENTALS_ID =  ${env.SERVER_KEY_CREDENTALS_ID}"
+				
+				echo "***************************************************************"
+				
             }
         }
-        stage('Example SSH Username with private key') {
-            environment {
-                SSH_CREDS = credentials('my-predefined-ssh-creds')
-            }
-            steps {
-                sh 'echo "SSH private key is located at $SSH_CREDS"'
-                sh 'echo "SSH user is $SSH_CREDS_USR"'
-                sh 'echo "SSH passphrase is $SSH_CREDS_PSW"'
-            }
-        }
+        
     }
 }
