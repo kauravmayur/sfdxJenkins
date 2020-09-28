@@ -1,0 +1,3 @@
+if [ "$CI_BRANCH" != "develop" ] && [ "$CI_BRANCH" != "master" ]; then sfdx force:auth:jwt:grant --clientid $QA_CONSUMER_KEY --jwtkeyfile assets/server.key --username $QA_USERNAME -r https://test.salesforce.com; fi
+if [ "$CI_BRANCH" != "develop" ] && [ "$CI_BRANCH" != "master" ]; then sfdx force:config:set defaultusername=$QA_USERNAME; fi
+if [ "$CI_BRANCH" != "develop" ] && [ "$CI_BRANCH" != "master" ]; then sfdx force:source:deploy -p force-app -c; fi
